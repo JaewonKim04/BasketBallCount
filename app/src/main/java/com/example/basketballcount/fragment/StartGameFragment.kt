@@ -1,4 +1,4 @@
-package com.example.basketballcount.fragment
+package com.example.basketballcount. fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,9 +24,16 @@ class StartGameFragment : Fragment() {
             onSegmentChecked {segment->
                 if(segment.text=="점수"){
                     startScoreGame=1
+                    view.decide_min_et.visibility=View.INVISIBLE
+                    view.decide_sec_et.visibility=View.INVISIBLE
+                    view.decide_score_et.visibility=View.VISIBLE
+
                 }
                 else if(segment.text=="시간"){
                     startScoreGame=2
+                    view.decide_min_et.visibility=View.VISIBLE
+                    view.decide_sec_et.visibility=View.VISIBLE
+                    view.decide_score_et.visibility=View.INVISIBLE
                 }
             }
             onSegmentUnchecked {
@@ -35,9 +42,15 @@ class StartGameFragment : Fragment() {
             onSegmentRechecked {segment->
                 if(segment.text=="점수"){
                     startScoreGame=1
+                    view.decide_min_et.visibility=View.INVISIBLE
+                    view.decide_sec_et.visibility=View.INVISIBLE
+                    view.decide_score_et.visibility=View.VISIBLE
                 }
                 else if(segment.text=="시간"){
                     startScoreGame=2
+                    view.decide_min_et.visibility=View.VISIBLE
+                    view.decide_sec_et.visibility=View.VISIBLE
+                    view.decide_score_et.visibility=View.INVISIBLE
                 }
             }
 
