@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GetUserNameActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".TimeGameActivity"></activity>
+        <activity android:name=".ScoreGameActivity" />
+        <activity
+            android:name=".GetUserNameActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".GameSettingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

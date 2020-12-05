@@ -30,6 +30,13 @@ class GetUserNameActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        moveTaskToBack(true)
+        finish()
+        android.os.Process.killProcess(android.os.Process.myPid())
+
+    }
     private fun getNameWatcher(){
         get_name_et.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
