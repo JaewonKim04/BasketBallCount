@@ -5,21 +5,27 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import com.example.basketballcount.MainActivity
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
-import com.example.basketballcount.TimeGameActivity
-import kotlinx.android.synthetic.main.activity_get_user_name.*
 import kotlinx.android.synthetic.main.fragment_start_game.*
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
+import kotlin.properties.Delegates
 
 class StartGameFragment : Fragment() {
-    var startScoreGame: Int = 1
+    companion object{
+        var goalScore by Delegates.notNull<Int>()
+        var goalTime by Delegates.notNull<Int>()
+        var startScoreGame by Delegates.notNull<Boolean>()
+
+    }
     var getAway = false
     var getMin = false
     var getSec = false
@@ -33,20 +39,23 @@ class StartGameFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_start_game, container, false)
         startButton = view.findViewById(R.id.start_game_btn)
         startButton.setOnClickListener {
-            if(readyToStart){
-                if (startScoreGame == 1) {
+            if (readyToStart) {
+                val test=view.decide_sec_et.text.toString()
+                Log.d("확인","됨")
+                Log.d("확인", test)
+                /*goalScore=view.decide_score_et.text.toString().toInt()
+                goalTime=view.decide_min_et.text.toString().toInt()*60+decide_sec_et.text.toString().toInt()
+                activity?.let{
                     val intent = Intent(context, ScoreGameActivity::class.java)
-                    intent.putExtra("goal_score",decide_score_et.text.toString().toInt())
+                    intent.putExtra("goal_score", StartGameFragment.goalScore)
+                    intent.putExtra("goal_time",StartGameFragment.goalTime)
+                    intent.putExtra("game_type",StartGameFragment.startScoreGame)
                     startActivityForResult(intent, 3)
-                } else {
-                    val time=decide_min_et.text.toString().toInt()*60+decide_sec_et.toString().toInt()
-                    val intent = Intent(context, TimeGameActivity::class.java)
-                    intent.putExtra("goal_time",time)
-                    startActivityForResult(intent, 4)
-                }
-            }
-            else{
-                Toast.makeText(context,"게임세팅을 해주세요",Toast.LENGTH_SHORT).show()
+                }*/
+
+
+            } else {
+                Toast.makeText(context, "게임세팅을 해주세요", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -57,7 +66,7 @@ class StartGameFragment : Fragment() {
             }
             onSegmentChecked { segment ->
                 if (segment.text == "점수") {
-                    startScoreGame = 1
+                    startScoreGame = true
                     view.decide_min_et.visibility = View.INVISIBLE
                     view.decide_sec_et.visibility = View.INVISIBLE
                     view.decide_score_et.visibility = View.VISIBLE
@@ -66,7 +75,7 @@ class StartGameFragment : Fragment() {
                     getSec = false
                     readyToStart()
                 } else if (segment.text == "시간") {
-                    startScoreGame = 2
+                    startScoreGame = false
                     view.decide_min_et.visibility = View.VISIBLE
                     view.decide_sec_et.visibility = View.VISIBLE
                     view.decide_score_et.visibility = View.INVISIBLE
@@ -77,11 +86,11 @@ class StartGameFragment : Fragment() {
                 }
             }
             onSegmentUnchecked {
-                startScoreGame = 1
+                startScoreGame = true
             }
             onSegmentRechecked { segment ->
                 if (segment.text == "점수") {
-                    startScoreGame = 1
+                    startScoreGame = true
                     view.decide_min_et.visibility = View.INVISIBLE
                     view.decide_sec_et.visibility = View.INVISIBLE
                     view.decide_score_et.visibility = View.VISIBLE
@@ -90,7 +99,7 @@ class StartGameFragment : Fragment() {
                     getSec = false
                     readyToStart()
                 } else if (segment.text == "시간") {
-                    startScoreGame = 2
+                    startScoreGame = false
                     view.decide_min_et.visibility = View.VISIBLE
                     view.decide_sec_et.visibility = View.VISIBLE
                     view.decide_score_et.visibility = View.INVISIBLE
