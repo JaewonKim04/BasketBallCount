@@ -4,10 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_score_game.*
+import java.util.*
 import kotlin.concurrent.timer
 import kotlin.properties.Delegates
 
 class ScoreGameActivity : AppCompatActivity() {
+
+    var timerTask: Timer?=null
     var gameType=true
     var myScore=0
     var awayScore=0
@@ -23,17 +26,21 @@ class ScoreGameActivity : AppCompatActivity() {
         goalScore=intent.getIntExtra("goal_score",0)
         goalTime=intent.getIntExtra("goal_time",0)
         gameType=intent.getBooleanExtra("game_type",true)
-        if(gameType){
-            timer(period=1000,initialDelay = 1000){
+        if(!gameType){
+            timerTask=timer(period = 1000,initialDelay = 1000){
                 goalTime+=1
+                runOnUiThread {
+                    setTime(goalTime)
+                }
+            }
+        }
+        else{timerTask=timer(period = 1000,initialDelay = 1000){
+            goalTime-=1
+            runOnUiThread {
                 setTime(goalTime)
             }
         }
-        else{
-            timer(period = 1000,initialDelay = 1000){
-                goalTime-=1
-                setTime(goalTime)
-            }
+
         }
 
 
@@ -63,7 +70,7 @@ class ScoreGameActivity : AppCompatActivity() {
         }
         away_plus_3_btn.setOnClickListener {
             awayScore+=3
-            checkFinish(myScore,AWAY_SCORE)
+            checkFinish(awayScore,AWAY_SCORE)
         }
         away_minus_1_btn.setOnClickListener {
             awayScore-=1
@@ -96,10 +103,11 @@ class ScoreGameActivity : AppCompatActivity() {
     private fun setTime(sec:Int){
         var min=0
         var second=sec
-        while(sec>60){
-            min+=1
-            second-=60
+        if(second>60){
+            min=second/60
+            second %= 60
         }
-        time_tv.text = min.toString()+":"+second.toString()
+
+        time_tv.setText(min.toString()+":"+second.toString())
     }
 }

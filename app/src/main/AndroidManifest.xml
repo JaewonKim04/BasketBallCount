@@ -11,9 +11,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ScoreGameActivity" />
         <activity
-            android:name=".GetUserNameActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MainActivity">
+            android:name=".GetUserNameActivity"/>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustUnspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
