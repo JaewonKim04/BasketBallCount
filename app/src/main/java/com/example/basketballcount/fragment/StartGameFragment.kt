@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.fragment.app.Fragment
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
+import kotlinx.android.synthetic.main.activity_get_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_start_game.*
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
 import java.lang.Integer.parseInt
@@ -22,12 +23,12 @@ import java.util.*
 import kotlin.properties.Delegates
 
 class StartGameFragment : Fragment() {
-    companion object{
-        var goalScore by Delegates.notNull<Int>()
-        var goalTime by Delegates.notNull<Int>()
-        var startScoreGame =false
+    var goalScore by Delegates.notNull<Int>()
+    var goalTime by Delegates.notNull<Int>()
+    var userName by Delegates.notNull<String>()
+    var startScoreGame = false
 
-    }
+
     var getAway = false
     var getMin = false
     var getSec = false
@@ -42,23 +43,22 @@ class StartGameFragment : Fragment() {
         startButton = view.findViewById(R.id.start_game_btn)
         startButton.setOnClickListener {
             if (readyToStart) {
-                if(startScoreGame){
-                    goalScore=parseInt(view.decide_score_et.text.toString())
-                    goalTime=0
-                }
-                else{
-                    goalScore=0
-                    goalTime= parseInt(view.decide_min_et.text.toString()) *60+ parseInt(view.decide_sec_et.text.toString())
+                userName = view.get_away_et.text.toString()
+                if (startScoreGame) {
+                    goalScore = parseInt(view.decide_score_et.text.toString())
+                    goalTime = 0
+                } else {
+                    goalScore = 0
+                    goalTime =
+                        parseInt(view.decide_min_et.text.toString()) * 60 + parseInt(view.decide_sec_et.text.toString())
                 }
 
-                activity?.let{
+                activity?.let {
                     val intent = Intent(context, ScoreGameActivity::class.java)
-                    if(startScoreGame){
-                        intent.putExtra("goal_score", StartGameFragment.goalScore)
-                        intent.putExtra("goal_time",StartGameFragment.goalTime)
-                    }
-
-                    intent.putExtra("game_type",StartGameFragment.startScoreGame)
+                    intent.putExtra("goal_score", goalScore)
+                    intent.putExtra("goal_time", goalTime)
+                    intent.putExtra("game_type", startScoreGame)
+                    intent.putExtra("user_name", userName)
                     startActivityForResult(intent, 3)
                 }
 
