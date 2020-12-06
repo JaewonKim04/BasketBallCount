@@ -22,7 +22,11 @@ class MainActivity : AppCompatActivity() {
     var resultAwayScore = 0
     var resultAwayName = ""
     var resultGameTime = 0
-
+    var resultGameDate=""
+    val winViewModel=WingameViewModel(userId)
+    var startShared: SharedPreferences =
+        getSharedPreferences("auto_login", Context.MODE_PRIVATE)
+    val editor = startShared.edit()
     //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,22 +73,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readAutoLogin(): Boolean {
-        val startShared: SharedPreferences =
-            getSharedPreferences("auto_login", Context.MODE_PRIVATE)
         if (startShared.getString("get_id", null) == null) {
             return true
         }
         startShared.getString("get_id", userName)
         startShared.getInt("win_game", winGame)
+        winViewModel.setText(winGame.toString())
         startShared.getInt("lose_game", loseGame)
         return false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val getShared: SharedPreferences =
-            getSharedPreferences("auto_login", Context.MODE_PRIVATE)
-        val editor = getShared.edit()
         if (requestCode == REQUEST_CODE_LOGIN) {
             userName = data?.getStringExtra("get_name").toString()
             winGame = 0
@@ -98,6 +98,15 @@ class MainActivity : AppCompatActivity() {
             resultAwayScore=data.getIntExtra("away_score",0)
             resultGameTime=data.getIntExtra("game_time",0)
             resultWinGame=data.getBooleanExtra("game_result",true)
+            resultGameDate=data.getStringExtra("game_date").toString()
+            if(resultWinGame){
+                winGame++
+                winViewModel.setText(winGame.toString())
+                editor.putString("win_game",winGame.toString())
+            }
+            else{
+                loseGame++
+            }
         }
         editor.apply()
     }

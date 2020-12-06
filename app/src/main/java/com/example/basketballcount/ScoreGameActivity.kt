@@ -2,10 +2,13 @@ package com.example.basketballcount
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import kotlinx.android.synthetic.main.activity_score_game.*
+import java.time.LocalDate
 import java.util.*
 import kotlin.concurrent.timer
 import kotlin.properties.Delegates
@@ -23,6 +26,7 @@ class ScoreGameActivity : AppCompatActivity() {
     val AWAY_SCORE = false
     var wingame = true
     private var goalScore by Delegates.notNull<Int>()
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_score_game)
@@ -32,7 +36,6 @@ class ScoreGameActivity : AppCompatActivity() {
         gameType = intent.getBooleanExtra("game_type", true)
         awayName = intent.getStringExtra("user_name").toString()
         textView7.text = awayName
-        Log.d("타임", goalTime.toString())
         if (gameType) {
             timerTask = timer(period = 1000, initialDelay = 1000) {
                 goalTime += 1
@@ -93,6 +96,7 @@ class ScoreGameActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkFinish(score: Int, where: Boolean) {
         if (where) {
             my_score_et.setText(score.toString())
@@ -122,15 +126,19 @@ class ScoreGameActivity : AppCompatActivity() {
 
         time_tv.text = min.toString() + ":" + second.toString()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun finishGame(){
+        val day:String=LocalDate.now().toString()
         if (gameType) {
             wingame = myScore > awayScore
             val intent = Intent()
+
             intent.putExtra("game_result", wingame)
             intent.putExtra("my_score", myScore)
             intent.putExtra("away_score", awayScore)
             intent.putExtra("game_time", goalTime)
             intent.putExtra("away_name", awayName)
+            intent.putExtra("game_date", day)
             setResult(Activity.RESULT_OK, intent)
             finish()
         } else {
@@ -141,6 +149,7 @@ class ScoreGameActivity : AppCompatActivity() {
             intent.putExtra("away_score", awayScore)
             intent.putExtra("game_time", goalTime)
             intent.putExtra("away_name", rememberTime)
+            intent.putExtra("game_date", day)
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
