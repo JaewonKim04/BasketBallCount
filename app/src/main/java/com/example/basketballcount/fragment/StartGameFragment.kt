@@ -36,10 +36,13 @@ class StartGameFragment : Fragment() {
             if(readyToStart){
                 if (startScoreGame == 1) {
                     val intent = Intent(context, ScoreGameActivity::class.java)
-                    startActivityForResult(intent, 1)
+                    intent.putExtra("goal_score",decide_score_et.text.toString().toInt())
+                    startActivityForResult(intent, 3)
                 } else {
+                    val time=decide_min_et.text.toString().toInt()*60+decide_sec_et.toString().toInt()
                     val intent = Intent(context, TimeGameActivity::class.java)
-                    startActivityForResult(intent, 2)
+                    intent.putExtra("goal_time",time)
+                    startActivityForResult(intent, 4)
                 }
             }
             else{
