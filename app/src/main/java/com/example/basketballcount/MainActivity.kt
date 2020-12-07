@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.basketballcount.fragment.OverviewFragment
 import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
@@ -22,15 +23,18 @@ class MainActivity : AppCompatActivity() {
     var resultAwayScore = 0
     var resultAwayName = ""
     var resultGameTime = 0
-    var resultGameDate=""
-    val winViewModel=WingameViewModel(userId)
-    var startShared: SharedPreferences =
-        getSharedPreferences("auto_login", Context.MODE_PRIVATE)
-    val editor = startShared.edit()
+    var resultGameDate = ""
+    val winViewModel = WingameViewModel()
+    private lateinit var startShared: SharedPreferences
+    private lateinit var editor :SharedPreferences.Editor
+
     //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        startShared =
+            getSharedPreferences("auto_login", Context.MODE_PRIVATE)
+        editor= startShared.edit()
         supportFragmentManager.beginTransaction().replace(
             R.id.container,
             OverviewFragment()
@@ -70,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener false
             }
         }
+
     }
 
     private fun readAutoLogin(): Boolean {
@@ -78,7 +83,6 @@ class MainActivity : AppCompatActivity() {
         }
         startShared.getString("get_id", userName)
         startShared.getInt("win_game", winGame)
-        winViewModel.setText(winGame.toString())
         startShared.getInt("lose_game", loseGame)
         return false
     }
@@ -94,17 +98,16 @@ class MainActivity : AppCompatActivity() {
             editor.putInt("get_lose", loseGame)
         } else if (requestCode == REQUEST_CODE_GAME) {
             resultAwayName = data!!.getStringExtra("away_name").toString()
-            resultMyScore=data.getIntExtra("my_score",0)
-            resultAwayScore=data.getIntExtra("away_score",0)
-            resultGameTime=data.getIntExtra("game_time",0)
-            resultWinGame=data.getBooleanExtra("game_result",true)
-            resultGameDate=data.getStringExtra("game_date").toString()
-            if(resultWinGame){
+            resultMyScore = data.getIntExtra("my_score", 0)
+            resultAwayScore = data.getIntExtra("away_score", 0)
+            resultGameTime = data.getIntExtra("game_time", 0)
+            resultWinGame = data.getBooleanExtra("game_result", true)
+            resultGameDate = data.getStringExtra("game_date").toString()
+            if (resultWinGame) {
                 winGame++
-                winViewModel.setText(winGame.toString())
-                editor.putString("win_game",winGame.toString())
-            }
-            else{
+                Log.d("결과",winGame.toString())
+                editor.putString("win_game", winGame.toString())
+            } else {
                 loseGame++
             }
         }

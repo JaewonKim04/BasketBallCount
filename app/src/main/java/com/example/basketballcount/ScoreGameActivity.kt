@@ -132,7 +132,6 @@ class ScoreGameActivity : AppCompatActivity() {
         if (gameType) {
             wingame = myScore > awayScore
             val intent = Intent()
-
             intent.putExtra("game_result", wingame)
             intent.putExtra("my_score", myScore)
             intent.putExtra("away_score", awayScore)
