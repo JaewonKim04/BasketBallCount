@@ -6,17 +6,20 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.basketballcount.MainActivity.Companion.editor
 import com.example.basketballcount.MainActivity.Companion.loseGame
 import com.example.basketballcount.MainActivity.Companion.winGame
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
+import com.example.basketballcount.WinGameViewModel
 import com.example.basketballcount.adaptor.Result
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
 import java.lang.Integer.parseInt
@@ -41,7 +44,7 @@ class StartGameFragment : Fragment() {
     var getScore = false
     var readyToStart = false
     private lateinit var startButton: Button
-    lateinit var overViewFragment:OverviewFragment
+    private lateinit var model:WinGameViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -209,11 +212,18 @@ class StartGameFragment : Fragment() {
         if (resultWinGame) {
             winGame++
             editor.putInt("win_game", winGame)
+            model.setWinGame(winGame.toString())
         } else {
             loseGame++
             editor.putInt("lose_game", loseGame)
+            model.setLoseGame(loseGame.toString())
         }
         editor.apply()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        model=ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
     }
 
 }

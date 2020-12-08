@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.example.basketballcount.fragment.OverviewFragment
 import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
     private var userName: String = ""
+    private lateinit var model:WinGameViewModel
     companion object{
         lateinit var startShared: SharedPreferences
         lateinit var editor :SharedPreferences.Editor
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        model=ViewModelProvider(this).get(WinGameViewModel::class.java)
         FirebaseApp.initializeApp(this)
         startShared =
             getSharedPreferences("auto_login", Context.MODE_PRIVATE)
@@ -80,6 +83,9 @@ class MainActivity : AppCompatActivity() {
             startShared.getString("get_id", userName)
             startShared.getInt("win_game", winGame)
             startShared.getInt("lose_game", loseGame)
+            model.setUserName(userName)
+            model.setWinGame(winGame.toString())
+            model.setLoseGame(loseGame.toString())
             return false
         }
 
@@ -91,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_LOGIN) {
             userName = data?.getStringExtra("get_name").toString()
             Log.d("이름",userName)
+            model.setUserName(userName)
             winGame = 0
             loseGame = 0
             editor.putString("get_id", userName)
