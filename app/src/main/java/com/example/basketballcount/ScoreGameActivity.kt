@@ -138,9 +138,9 @@ class ScoreGameActivity : AppCompatActivity() {
         intent.putExtra("away_score", awayScore)
         intent.putExtra("away_name", awayName)
         if (gameType) {
-            intent.putExtra("away_name", rememberTime)
+            intent.putExtra("away_name", goalTime)
         } else {
-            intent.putExtra("game_time", goalTime)
+            intent.putExtra("game_time", rememberTime)
         }
         intent.putExtra("game_date", day)
         setResult(Activity.RESULT_OK, intent)

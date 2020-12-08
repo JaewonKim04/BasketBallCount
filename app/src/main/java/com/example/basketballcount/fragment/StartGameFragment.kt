@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.basketballcount.MainActivity.Companion.editor
 import com.example.basketballcount.MainActivity.Companion.loseGame
 import com.example.basketballcount.MainActivity.Companion.winGame
 import com.example.basketballcount.R
@@ -208,17 +206,15 @@ class StartGameFragment : Fragment() {
             resultWinGame = data.getBooleanExtra("game_result", true)
             resultGameDate = data.getStringExtra("game_date").toString()
             val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
+            model.setResult(setRecyclerView)
         }
         if (resultWinGame) {
             winGame++
-            editor.putInt("win_game", winGame)
             model.setWinGame(winGame.toString())
         } else {
             loseGame++
-            editor.putInt("lose_game", loseGame)
             model.setLoseGame(loseGame.toString())
         }
-        editor.apply()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

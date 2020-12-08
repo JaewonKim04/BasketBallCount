@@ -92,8 +92,5 @@ class GetUserNameActivity : AppCompatActivity() {
             }
         })
     }
-    private fun getPassWord(){
-
-    }
 
 }

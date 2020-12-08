@@ -74,6 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/name_tv" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/result_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
