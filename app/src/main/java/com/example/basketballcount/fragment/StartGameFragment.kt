@@ -11,15 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.fragment.app.Fragment
+import com.example.basketballcount.MainActivity.Companion.editor
+import com.example.basketballcount.MainActivity.Companion.loseGame
+import com.example.basketballcount.MainActivity.Companion.winGame
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
-import kotlinx.android.synthetic.main.activity_get_user_name.view.*
-import kotlinx.android.synthetic.main.fragment_start_game.*
+import com.example.basketballcount.adaptor.Result
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
 import java.lang.Integer.parseInt
-import java.util.*
 import kotlin.properties.Delegates
 
 class StartGameFragment : Fragment() {
@@ -28,6 +28,12 @@ class StartGameFragment : Fragment() {
     var userName by Delegates.notNull<String>()
     var startScoreGame = false
 
+    var resultWinGame = true
+    var resultMyScore = 0
+    var resultAwayScore = 0
+    var resultAwayName = ""
+    var resultGameTime = 0
+    var resultGameDate = ""
 
     var getAway = false
     var getMin = false
@@ -35,6 +41,7 @@ class StartGameFragment : Fragment() {
     var getScore = false
     var readyToStart = false
     private lateinit var startButton: Button
+    lateinit var overViewFragment:OverviewFragment
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -186,6 +193,27 @@ class StartGameFragment : Fragment() {
             startButton.setBackgroundColor(Color.GRAY)
             false
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 3) {
+            resultAwayName = data!!.getStringExtra("away_name").toString()
+            resultMyScore = data.getIntExtra("my_score", 0)
+            resultAwayScore = data.getIntExtra("away_score", 0)
+            resultGameTime = data.getIntExtra("game_time", 0)
+            resultWinGame = data.getBooleanExtra("game_result", true)
+            resultGameDate = data.getStringExtra("game_date").toString()
+            val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
+        }
+        if (resultWinGame) {
+            winGame++
+            editor.putInt("win_game", winGame)
+        } else {
+            loseGame++
+            editor.putInt("lose_game", loseGame)
+        }
+        editor.apply()
     }
 
 }

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/signup_guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/signup_guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/signup_guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <TextView
+        android:id="@+id/signup_mainview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/signup_guideline_top" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/signup_get_nickname_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingTop="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toStartOf="@+id/signup_guideline_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/signup_mainview"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_get_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_edit_24"
+            android:drawableLeft="@drawable/ic_baseline_edit_24"
+            android:drawablePadding="16dp"
+            android:hint="닉네임입력"
+            android:inputType="textPersonName"
+            android:windowSoftInputMode="adjustResize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/signup_get_id_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="0dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@+id/signup_guideline_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/signup_get_nickname_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_get_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawableLeft="@drawable/ic_baseline_email_24"
+            android:drawablePadding="16dp"
+            android:hint="email입력"
+            android:inputType="textPersonName"
+            android:windowSoftInputMode="adjustResize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/signup_get_password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="0dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@+id/signup_guideline_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/signup_get_id_layout"
+        app:passwordToggleEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_get_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="16dp"
+            android:hint="비밀번호입력(7자이상,20자이하)"
+            android:inputType="textPassword"
+            android:windowSoftInputMode="adjustResize"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/signup_check_password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint=" "
+        android:paddingTop="0dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@+id/signup_guideline_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/signup_get_password_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signup_check_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="16dp"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:hint="비밀번호 재입력"
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"
+            android:windowSoftInputMode="adjustResize"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/signup_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="#FBB615"
+        android:paddingBottom="10dp"
+        android:text="회원가입"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toStartOf="@+id/signup_guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/signup_guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/signup_check_password_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "386649869676",
+    "project_id": "basketcount-41d27",
+    "storage_bucket": "basketcount-41d27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386649869676:android:1a8d891954da9526ea7749",
+        "android_client_info": {
+          "package_name": "com.example.basketballcount"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "386649869676-rtf28fgb46tiibqf3in2j188p5f0ptr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZqynXDOnkQPGSF8PMlxeQew64wezRm6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386649869676-rtf28fgb46tiibqf3in2j188p5f0ptr7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

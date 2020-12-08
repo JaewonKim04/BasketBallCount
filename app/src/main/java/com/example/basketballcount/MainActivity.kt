@@ -6,32 +6,30 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import com.example.basketballcount.fragment.OverviewFragment
 import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
-    private val REQUEST_CODE_GAME = 3
     private var userName: String = ""
-    private var winGame: Int = 0
-    private var loseGame: Int = 0
-    var resultWinGame = true
-    var resultMyScore = 0
-    var resultAwayScore = 0
-    var resultAwayName = ""
-    var resultGameTime = 0
-    var resultGameDate = ""
-    val winViewModel = WingameViewModel()
-    private lateinit var startShared: SharedPreferences
-    private lateinit var editor :SharedPreferences.Editor
+    companion object{
+        lateinit var startShared: SharedPreferences
+        lateinit var editor :SharedPreferences.Editor
+        var winGame= 0
+        var loseGame= 0
+    }
+
 
     //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        FirebaseApp.initializeApp(this)
         startShared =
             getSharedPreferences("auto_login", Context.MODE_PRIVATE)
         editor= startShared.edit()
@@ -78,38 +76,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readAutoLogin(): Boolean {
-        if (startShared.getString("get_id", null) == null) {
-            return true
+        if (startShared.getString("get_id", null) != null) {
+            startShared.getString("get_id", userName)
+            startShared.getInt("win_game", winGame)
+            startShared.getInt("lose_game", loseGame)
+            return false
         }
-        startShared.getString("get_id", userName)
-        startShared.getInt("win_game", winGame)
-        startShared.getInt("lose_game", loseGame)
-        return false
+
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN) {
             userName = data?.getStringExtra("get_name").toString()
+            Log.d("이름",userName)
             winGame = 0
             loseGame = 0
             editor.putString("get_id", userName)
-            editor.putInt("get_win", winGame)
-            editor.putInt("get_lose", loseGame)
-        } else if (requestCode == REQUEST_CODE_GAME) {
-            resultAwayName = data!!.getStringExtra("away_name").toString()
-            resultMyScore = data.getIntExtra("my_score", 0)
-            resultAwayScore = data.getIntExtra("away_score", 0)
-            resultGameTime = data.getIntExtra("game_time", 0)
-            resultWinGame = data.getBooleanExtra("game_result", true)
-            resultGameDate = data.getStringExtra("game_date").toString()
-            if (resultWinGame) {
-                winGame++
-                Log.d("결과",winGame.toString())
-                editor.putString("win_game", winGame.toString())
-            } else {
-                loseGame++
-            }
+            editor.putInt("win_game", winGame)
+            editor.putInt("lose_game", loseGame)
         }
         editor.apply()
     }
