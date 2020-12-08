@@ -23,27 +23,29 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
     private var userName: String = ""
     private lateinit var model:WinGameViewModel
-    lateinit var startShared: SharedPreferences
-    lateinit var editor :SharedPreferences.Editor
+
     companion object{
         var winGame= 0
         var loseGame= 0
         val overviewList= mutableListOf<Result>()
         lateinit var result:ResultAdaptor
+        lateinit var startShared: SharedPreferences
+        lateinit var editor :SharedPreferences.Editor
         val SHARED_NAME="get_id"
         val SHARED_WIN="win_game"
         val SHARED_LOSE="lose_game"
+        val SHARED_RESULT="game_result"
     }
     //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        startShared = getSharedPreferences("auto_login", Context.MODE_PRIVATE)
         result= ResultAdaptor(overviewList)
         startObserve()
         model=ViewModelProvider(this).get(WinGameViewModel::class.java)
         FirebaseApp.initializeApp(this)
-        startShared =
-            getSharedPreferences("auto_login", Context.MODE_PRIVATE)
+
         editor= startShared.edit()
         supportFragmentManager.beginTransaction().replace(
             R.id.container,
