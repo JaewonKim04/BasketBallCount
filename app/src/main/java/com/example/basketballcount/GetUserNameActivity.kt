@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
+import com.example.basketballcount.MainActivity.Companion.database
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthMultiFactorException
@@ -43,6 +44,11 @@ class GetUserNameActivity : AppCompatActivity() {
                                 user.displayName
                                 name= user.displayName.toString()
                             }
+                            val readUser=database.collection("users").document(name+get_name_et.text.toString())
+                            readUser.get()
+                                .addOnSuccessListener { document->
+                                    Log.d("test",document.id)
+                                }
                             Toast.makeText(applicationContext,"로그인 되었습니다",Toast.LENGTH_SHORT).show()
                             intent.putExtra("get_name",name)
                             setResult(Activity.RESULT_OK,intent)

@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.example.basketballcount.MainActivity.Companion.database
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -48,8 +49,18 @@ class SignupActivity : AppCompatActivity() {
                                 .addOnCompleteListener{
                                     task->
                                     if(task.isSuccessful){
-                                        Toast.makeText(this,"회원가입 되었습니다",Toast.LENGTH_SHORT).show()
-                                        finish()
+                                        val user= hashMapOf(
+                                            "losegame" to 0,
+                                            "result_gason" to "",
+                                            "wingame" to 0
+                                        )
+                                        database.collection("users").document(signup_get_nickname.text.toString()+signup_get_id.text.toString()).set(user).addOnSuccessListener{
+                                            Toast.makeText(this,"회원가입 되었습니다",Toast.LENGTH_SHORT).show()
+                                            finish()
+                                        }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this,"오류가 발생했습니다",Toast.LENGTH_SHORT).show()
+                                            }
                                     }
                                     else{
                                         Toast.makeText(this,"오류가 발생했습니다",Toast.LENGTH_SHORT).show()

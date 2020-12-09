@@ -61,28 +61,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/season_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:text="winter player"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_tv" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/result_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/season_tv"
+        app:layout_constraintTop_toBottomOf="@+id/name_tv"
         tools:listitem="@layout/record_item" />
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="64dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/away_button_background"
+        android:text="로그아웃"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toTopOf="@+id/result_recyclerview"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

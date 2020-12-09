@@ -81,7 +81,7 @@
             android:drawableLeft="@drawable/ic_baseline_email_24"
             android:drawablePadding="16dp"
             android:hint="email입력"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:windowSoftInputMode="adjustResize" />
     </com.google.android.material.textfield.TextInputLayout>
 

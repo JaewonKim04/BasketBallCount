@@ -16,6 +16,7 @@ import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var model:WinGameViewModel
 
     companion object{
+        val database= FirebaseFirestore.getInstance()
         var winGame= 0
         var loseGame= 0
         val overviewList= mutableListOf<Result>()
@@ -131,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             model.setUserName(userName)
             winGame = 0
             loseGame = 0
+            editor.putString(SHARED_RESULT,"")
             editor.putString(SHARED_NAME, userName)
             editor.putInt(SHARED_WIN, winGame)
             editor.putInt(SHARED_LOSE, loseGame)
