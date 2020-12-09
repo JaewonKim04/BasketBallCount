@@ -30,21 +30,25 @@ class OverviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        result = ResultAdaptor(overviewList)
+        result = ResultAdaptor(overviewList)//
         val makeGson = GsonBuilder().create()
-        val listType = object : TypeToken<MutableList<Result>>() {}
+        val listType:TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
         val model = ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
+        val strContact= makeGson.toJson(overviewList, listType.type)
+        editor.putString(SHARED_RESULT,strContact)
+        editor.apply()
         overviewList.clear()
+        Log.d("itemCount","리셋됨")
         val getRecycler = startShared.getString(SHARED_RESULT, "")
-        val datas = makeGson.fromJson<Result>(getRecycler, listType.type)
-        overviewList.addAll(mutableListOf(datas))
+        val datas = makeGson.fromJson<MutableList<Result>>(getRecycler, listType.type)
+        overviewList.addAll(datas)//
         result.notifyDataSetChanged()
-
         result_recyclerview.adapter = result
         result_recyclerview.layoutManager = LinearLayoutManager(requireActivity())
         model.wingame.observe(viewLifecycleOwner, Observer {
@@ -57,14 +61,10 @@ class OverviewFragment : Fragment() {
             lose_tv.text = it
         })
         model.resultRecyclerView.observe(viewLifecycleOwner, Observer {
-            overviewList.add(result.itemCount, it)
-
-
-            val strContact = makeGson.toJson(overviewList, listType.type)
             editor.putString(SHARED_RESULT, strContact)
             editor.commit()
             Log.d("itemCount", result.itemCount.toString())
-            //result.addItem(it)
+            result.notifyDataSetChanged()
         })
     }
 

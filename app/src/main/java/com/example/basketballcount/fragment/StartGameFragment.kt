@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.basketballcount.MainActivity.Companion.loseGame
+import com.example.basketballcount.MainActivity.Companion.overviewList
+import com.example.basketballcount.MainActivity.Companion.result
 import com.example.basketballcount.MainActivity.Companion.winGame
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
@@ -206,7 +208,8 @@ class StartGameFragment : Fragment() {
             resultWinGame = data.getBooleanExtra("game_result", true)
             resultGameDate = data.getStringExtra("game_date").toString()
             val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
-            model.setResult(setRecyclerView)
+            overviewList.add(result.itemCount,setRecyclerView)
+            model.setResult(overviewList)
         }
         if (resultWinGame) {
             winGame++

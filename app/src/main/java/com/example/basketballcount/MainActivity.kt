@@ -16,6 +16,8 @@ import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_overview.*
 
@@ -106,6 +108,13 @@ class MainActivity : AppCompatActivity() {
             userName= startShared.getString(SHARED_NAME,"")!!
             winGame=startShared.getInt(SHARED_WIN, 0)
             loseGame=startShared.getInt(SHARED_LOSE, 0)
+            overviewList.clear()
+            val makeGson = GsonBuilder().create()
+            val listType:TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
+            val getRecycler = startShared.getString(SHARED_RESULT, "")
+            val datas = makeGson.fromJson<MutableList<Result>>(getRecycler, listType.type)
+            overviewList.addAll(datas)//
+            model.setResult(overviewList)
             model.setUserName(userName)
             model.setWinGame(winGame.toString())
             model.setLoseGame(loseGame.toString())
