@@ -25,32 +25,37 @@ import kotlinx.android.synthetic.main.fragment_overview.*
 class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
     private var userName: String = ""
-    private lateinit var model:WinGameViewModel
+    private lateinit var model: WinGameViewModel
+    val makeGson = GsonBuilder().create()
+    val listType: TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
 
-    companion object{
-        val database= FirebaseFirestore.getInstance()
-        var winGame= 0
-        var loseGame= 0
-        val overviewList= mutableListOf<Result>()
-        lateinit var result:ResultAdaptor
+    companion object {
+        val database = FirebaseFirestore.getInstance()
+        var winGame = 0
+        var loseGame = 0
+        val overviewList = mutableListOf<Result>()
+        lateinit var result: ResultAdaptor
         lateinit var startShared: SharedPreferences
-        lateinit var editor :SharedPreferences.Editor
-        val SHARED_NAME="get_id"
-        val SHARED_WIN="win_game"
-        val SHARED_LOSE="lose_game"
-        val SHARED_RESULT="game_result"
+        lateinit var editor: SharedPreferences.Editor
+
+        //val user=database.collection("users")
+        val SHARED_NAME = "get_id"
+        val SHARED_WIN = "win_game"
+        val SHARED_LOSE = "lose_game"
+        val SHARED_RESULT = "game_result"
     }
+
     //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         startShared = getSharedPreferences("auto_login", Context.MODE_PRIVATE)
-        result= ResultAdaptor(overviewList)
+        result = ResultAdaptor(overviewList)
         startObserve()
-        model=ViewModelProvider(this).get(WinGameViewModel::class.java)
+        model = ViewModelProvider(this).get(WinGameViewModel::class.java)
         FirebaseApp.initializeApp(this)
 
-        editor= startShared.edit()
+        editor = startShared.edit()
         supportFragmentManager.beginTransaction().replace(
             R.id.container,
             OverviewFragment()
@@ -63,14 +68,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startObserve(){
-        val model=ViewModelProvider(this).get(WinGameViewModel::class.java)
+    private fun startObserve() {
+        val model = ViewModelProvider(this).get(WinGameViewModel::class.java)
         model.wingame.observe(this, Observer {
-            editor.putInt(SHARED_WIN,it.toInt())
+            editor.putInt(SHARED_WIN, it.toInt())
             editor.apply()
         })
         model.losegame.observe(this, Observer {
-            editor.putInt(SHARED_LOSE,it.toInt())
+            editor.putInt(SHARED_LOSE, it.toInt())
             editor.apply()
         })
     }
@@ -107,12 +112,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun readAutoLogin(): Boolean {
         if (startShared.getString(SHARED_NAME, null) != null) {
-            userName= startShared.getString(SHARED_NAME,"")!!
-            winGame=startShared.getInt(SHARED_WIN, 0)
-            loseGame=startShared.getInt(SHARED_LOSE, 0)
+            userName = startShared.getString(SHARED_NAME, "")!!
+            winGame = startShared.getInt(SHARED_WIN, 0)
+            loseGame = startShared.getInt(SHARED_LOSE, 0)
             overviewList.clear()
-            val makeGson = GsonBuilder().create()
-            val listType:TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
             val getRecycler = startShared.getString(SHARED_RESULT, "")
             val datas = makeGson.fromJson<MutableList<Result>>(getRecycler, listType.type)
             overviewList.addAll(datas)//
@@ -128,12 +131,27 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN) {
+            var result = ""
+            var wingame = ""
+            var losegame = ""
             userName = data?.getStringExtra("get_name").toString()
-            Log.d("이름",userName)
+            if (data != null) {
+                wingame = data.getStringExtra("get_win_fire").toString()
+                losegame = data.getStringExtra("get_lose_fire").toString()
+                result = data.getStringExtra("get_result").toString()
+                val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
+                if(datas!=null){
+                    overviewList.addAll(datas)
+                    model.setResult(overviewList)
+                }
+                winGame = wingame.toInt()
+                loseGame = losegame.toInt()
+            }
+            Log.d("이름", userName)
             model.setUserName(userName)
-            winGame = 0
-            loseGame = 0
-            editor.putString(SHARED_RESULT,"")
+            model.setLoseGame(loseGame.toString())
+            model.setWinGame(winGame.toString())
+            editor.putString(SHARED_RESULT, result)
             editor.putString(SHARED_NAME, userName)
             editor.putInt(SHARED_WIN, winGame)
             editor.putInt(SHARED_LOSE, loseGame)

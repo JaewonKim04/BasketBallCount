@@ -21,47 +21,62 @@ import kotlinx.coroutines.NonCancellable.start
 import org.w3c.dom.Text
 
 class GetUserNameActivity : AppCompatActivity() {
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_get_user_name)
-        val intent= Intent()
-        auth= Firebase.auth
+        val intent = Intent()
+        auth = Firebase.auth
         getNameWatcher()
         go_signup_tv.setOnClickListener {
-            val intent=Intent(this,SignupActivity::class.java)
+            val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
         }
         get_user_btn.setOnClickListener {
-            if(get_name_et.text.toString().isNotEmpty()&&get_password_tv.text.toString().isNotEmpty()){
-                auth.signInWithEmailAndPassword(get_name_et.text.toString(),get_password_tv.text.toString())
-                    .addOnCompleteListener(this){
-                        task ->
-                        if(task.isSuccessful){
-                            val user=Firebase.auth.currentUser
-                            var name=""
+            if (get_name_et.text.toString().isNotEmpty() && get_password_tv.text.toString()
+                    .isNotEmpty()
+            ) {
+                auth.signInWithEmailAndPassword(
+                    get_name_et.text.toString(),
+                    get_password_tv.text.toString()
+                )
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val user = Firebase.auth.currentUser
+                            var name = ""
+                            var resultGson = ""
+                            var wingame = ""
+                            var losegame = ""
                             user?.let {
                                 user.displayName
-                                name= user.displayName.toString()
+                                name = user.displayName.toString()
                             }
-                            val readUser=database.collection("users").document(name+get_name_et.text.toString())
+                            val readUser = database.collection("users")
+                                .document(name + get_name_et.text.toString())
                             readUser.get()
-                                .addOnSuccessListener { document->
-                                    Log.d("test",document.id)
+                                .addOnSuccessListener { document ->
+                                    resultGson = document.data?.get("result_gson") as String
+                                    wingame = document.data?.get("wingame") as String
+                                    losegame = document.data?.get("losegame") as String
                                 }
-                            Toast.makeText(applicationContext,"로그인 되었습니다",Toast.LENGTH_SHORT).show()
-                            intent.putExtra("get_name",name)
-                            setResult(Activity.RESULT_OK,intent)
+                            Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
+                                .show()
+                            intent.putExtra("get_name", name)
+                            intent.putExtra("get_result", resultGson)
+                            intent.putExtra("get_win_fire", wingame)
+                            intent.putExtra("get_lose_fire", losegame)
+                            setResult(Activity.RESULT_OK, intent)
                             finish()
-                        }else{
-                            Toast.makeText(applicationContext,"이메일,비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                applicationContext,
+                                "이메일,비밀번호를 확인해주세요",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-
-
-            }
-            else{
-                Toast.makeText(applicationContext,"이메일,비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "이메일,비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -73,13 +88,13 @@ class GetUserNameActivity : AppCompatActivity() {
         android.os.Process.killProcess(android.os.Process.myPid())
 
     }
-    private fun getNameWatcher(){
-        get_password_tv.addTextChangedListener(object :TextWatcher{
+
+    private fun getNameWatcher() {
+        get_password_tv.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(get_name_et.text.toString().isNotEmpty()){
+                if (get_name_et.text.toString().isNotEmpty()) {
                     get_user_btn.setBackgroundColor(Color.GREEN)
-                }
-                else{
+                } else {
                     get_user_btn.setBackgroundColor(Color.GRAY)
                 }
             }
@@ -88,11 +103,10 @@ class GetUserNameActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(count>0){
+                if (count > 0) {
                     get_user_btn.setBackgroundColor(Color.GREEN)
 
-                }
-                else{
+                } else {
                     get_user_btn.setBackgroundColor(Color.GRAY)
                 }
             }
