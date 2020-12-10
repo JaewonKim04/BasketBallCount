@@ -41,8 +41,8 @@ class GetUserNameActivity : AppCompatActivity() {
                             val user = Firebase.auth.currentUser
                             var name = ""
                             var resultGson = ""
-                            var wingame :Long
-                            var losegame :Long
+                            var wingame: Long
+                            var losegame: Long
                             user?.let {
                                 user.displayName
                                 name = user.displayName.toString()
@@ -57,10 +57,10 @@ class GetUserNameActivity : AppCompatActivity() {
                                 losegame = document.data?.get("losegame") as Long
                                 intent.putExtra("get_win_fire", wingame)
                                 intent.putExtra("get_lose_fire", losegame)
-                                intent.putExtra("get_email",user.email)
                             }
                             Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
                                 .show()
+                            intent.putExtra("get_email", user!!.email.toString())
                             intent.putExtra("get_name", name)
                             intent.putExtra("get_result", resultGson)
                             setResult(Activity.RESULT_OK, intent)
