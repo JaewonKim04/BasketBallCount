@@ -142,8 +142,6 @@ class MainActivity : AppCompatActivity() {
             wingame = data.getLongExtra("get_win_fire", 0).toInt()
             losegame = data.getLongExtra("get_lose_fire", 0).toInt()
             result = data.getStringExtra("get_result").toString()
-            Log.d("이메일", result)
-            Log.d("이메일", "data!=null")
             val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
             if (datas != null) {
                 overviewList.addAll(datas)
@@ -161,7 +159,6 @@ class MainActivity : AppCompatActivity() {
             editor.putInt(SHARED_LOSE, loseGame)
         }
         editor.commit()
-        Log.d("이메일", startShared.getString("get_email","안받아지노").toString())
     }
 
 }

@@ -65,7 +65,6 @@ class OverviewFragment : Fragment() {
         editor.putString(SHARED_RESULT, strContact)
         editor.apply()
         overviewList.clear()
-        Log.d("itemCount", "리셋됨")
         val email= startShared.getString(SHARED_EMAIL,"").toString()
         val getRecycler = startShared.getString(SHARED_RESULT, "")
         val wingame= startShared.getInt(SHARED_WIN,0)
@@ -117,12 +116,9 @@ class OverviewFragment : Fragment() {
             var losegame = 0
             val userName = data!!.getStringExtra("get_name").toString()
             email = data.getStringExtra("get_email").toString()
-            Log.d("이메일", startShared.getString(SHARED_EMAIL, "안되네").toString())
             wingame = data.getLongExtra("get_win_fire", 0).toInt()
             losegame = data.getLongExtra("get_lose_fire", 0).toInt()
             result = data.getStringExtra("get_result").toString()
-            Log.d("이메일", result)
-            Log.d("이메일", "data!=null")
             val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
             if (datas != null) {
                 overviewList.addAll(datas)
