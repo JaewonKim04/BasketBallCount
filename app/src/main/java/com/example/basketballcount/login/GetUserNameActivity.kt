@@ -1,4 +1,4 @@
-package com.example.basketballcount
+package com.example.basketballcount.login
 
 import android.app.Activity
 import android.content.Intent
@@ -7,18 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Toast
 import com.example.basketballcount.MainActivity.Companion.database
-import com.google.firebase.FirebaseApp
+import com.example.basketballcount.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthMultiFactorException
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_get_user_name.*
-import kotlinx.coroutines.NonCancellable.start
-import org.w3c.dom.Text
 
 class GetUserNameActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -45,26 +40,27 @@ class GetUserNameActivity : AppCompatActivity() {
                             val user = Firebase.auth.currentUser
                             var name = ""
                             var resultGson = ""
-                            var wingame = ""
-                            var losegame = ""
+                            var wingame :Long
+                            var losegame :Long
                             user?.let {
                                 user.displayName
                                 name = user.displayName.toString()
                             }
-                            val readUser = database.collection("users")
-                                .document(name + get_name_et.text.toString())
-                            readUser.get()
-                                .addOnSuccessListener { document ->
-                                    resultGson = document.data?.get("result_gson") as String
-                                    wingame = document.data?.get("wingame") as String
-                                    losegame = document.data?.get("losegame") as String
-                                }
+                            val readUser = user?.email?.let { it1 ->
+                                database.collection("users")
+                                    .document(it1)
+                            }
+                            readUser?.get()?.addOnSuccessListener { document ->
+                                resultGson = document.data?.get("result_gson") as String
+                                wingame = document.data?.get("wingame") as Long
+                                losegame = document.data?.get("losegame") as Long
+                                intent.putExtra("get_win_fire", wingame)
+                                intent.putExtra("get_lose_fire", losegame)
+                            }
                             Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
                                 .show()
                             intent.putExtra("get_name", name)
                             intent.putExtra("get_result", resultGson)
-                            intent.putExtra("get_win_fire", wingame)
-                            intent.putExtra("get_lose_fire", losegame)
                             setResult(Activity.RESULT_OK, intent)
                             finish()
                         } else {

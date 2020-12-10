@@ -1,4 +1,4 @@
-package com.example.basketballcount
+package com.example.basketballcount.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData

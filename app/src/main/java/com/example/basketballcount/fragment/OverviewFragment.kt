@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.basketballcount.GetUserNameActivity
+import com.example.basketballcount.login.GetUserNameActivity
 import com.example.basketballcount.MainActivity.Companion.SHARED_RESULT
 import com.example.basketballcount.MainActivity.Companion.editor
 import com.example.basketballcount.MainActivity.Companion.overviewList
 import com.example.basketballcount.MainActivity.Companion.result
 import com.example.basketballcount.MainActivity.Companion.startShared
 import com.example.basketballcount.R
-import com.example.basketballcount.ScoreGameActivity
-import com.example.basketballcount.WinGameViewModel
+import com.example.basketballcount.viewmodel.WinGameViewModel
 import com.example.basketballcount.adaptor.Result
 import com.example.basketballcount.adaptor.ResultAdaptor
 import com.google.gson.GsonBuilder

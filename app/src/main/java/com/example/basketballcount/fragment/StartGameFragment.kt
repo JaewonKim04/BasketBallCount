@@ -19,7 +19,7 @@ import com.example.basketballcount.MainActivity.Companion.result
 import com.example.basketballcount.MainActivity.Companion.winGame
 import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
-import com.example.basketballcount.WinGameViewModel
+import com.example.basketballcount.viewmodel.WinGameViewModel
 import com.example.basketballcount.adaptor.Result
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
 import java.lang.Integer.parseInt
@@ -44,7 +44,7 @@ class StartGameFragment : Fragment() {
     var getScore = false
     var readyToStart = false
     private lateinit var startButton: Button
-    private lateinit var model:WinGameViewModel
+    private lateinit var model: WinGameViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

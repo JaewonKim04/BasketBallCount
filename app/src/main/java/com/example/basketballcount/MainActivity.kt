@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.basketballcount.adaptor.Result
@@ -14,13 +13,14 @@ import com.example.basketballcount.adaptor.ResultAdaptor
 import com.example.basketballcount.fragment.OverviewFragment
 import com.example.basketballcount.fragment.SearchFragment
 import com.example.basketballcount.fragment.StartGameFragment
+import com.example.basketballcount.login.GetUserNameActivity
+import com.example.basketballcount.viewmodel.WinGameViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_overview.*
 
 class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
@@ -132,20 +132,22 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN) {
             var result = ""
-            var wingame = ""
-            var losegame = ""
+            var wingame=0
+            var losegame=0
             userName = data?.getStringExtra("get_name").toString()
             if (data != null) {
-                wingame = data.getStringExtra("get_win_fire").toString()
-                losegame = data.getStringExtra("get_lose_fire").toString()
+                wingame = data.getLongExtra("get_win_fire",0).toInt()
+                losegame = data.getLongExtra("get_lose_fire",0).toInt()
                 result = data.getStringExtra("get_result").toString()
                 val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
-                if(datas!=null){
+                if (datas != null) {
                     overviewList.addAll(datas)
                     model.setResult(overviewList)
                 }
-                winGame = wingame.toInt()
-                loseGame = losegame.toInt()
+                winGame = wingame
+                loseGame = losegame
+
+
             }
             Log.d("이름", userName)
             model.setUserName(userName)

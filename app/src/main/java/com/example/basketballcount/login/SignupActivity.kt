@@ -1,4 +1,4 @@
-package com.example.basketballcount
+package com.example.basketballcount.login
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.basketballcount.MainActivity.Companion.database
+import com.example.basketballcount.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -25,7 +26,9 @@ class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-        checkDrawble = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_done_24)
+        checkDrawble = ContextCompat.getDrawable(applicationContext,
+            R.drawable.ic_baseline_done_24
+        )
         baseDrawble = ContextCompat.getDrawable(
             applicationContext,
             R.drawable.ic_baseline_check_circle_outline_24
@@ -50,11 +53,11 @@ class SignupActivity : AppCompatActivity() {
                                     task->
                                     if(task.isSuccessful){
                                         val user= hashMapOf(
-                                            "losegame" to "0",
-                                            "result_gason" to "",
-                                            "wingame" to "0"
+                                            "result_gson" to "",
+                                            "losegame" to 0,
+                                            "wingame" to 0
                                         )
-                                        database.collection("users").document(signup_get_nickname.text.toString()+signup_get_id.text.toString()).set(user).addOnSuccessListener{
+                                        database.collection("users").document(signup_get_id.text.toString()).set(user).addOnSuccessListener{
                                             Toast.makeText(this,"회원가입 되었습니다",Toast.LENGTH_SHORT).show()
                                             finish()
                                         }
