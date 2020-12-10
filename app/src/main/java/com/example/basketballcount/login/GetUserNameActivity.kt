@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import com.example.basketballcount.MainActivity.Companion.database
 import com.example.basketballcount.R
@@ -56,6 +57,7 @@ class GetUserNameActivity : AppCompatActivity() {
                                 losegame = document.data?.get("losegame") as Long
                                 intent.putExtra("get_win_fire", wingame)
                                 intent.putExtra("get_lose_fire", losegame)
+                                intent.putExtra("get_email",user.email)
                             }
                             Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
                                 .show()

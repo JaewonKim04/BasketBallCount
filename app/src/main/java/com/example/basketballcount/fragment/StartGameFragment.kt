@@ -209,6 +209,7 @@ class StartGameFragment : Fragment() {
             resultGameDate = data.getStringExtra("game_date").toString()
             val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
             overviewList.add(result.itemCount,setRecyclerView)
+
             model.setResult(overviewList)
         }
         if (resultWinGame) {

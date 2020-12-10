@@ -25,11 +25,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
     private var userName: String = ""
-    private lateinit var model: WinGameViewModel
-    val makeGson = GsonBuilder().create()
-    val listType: TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
+
+
 
     companion object {
+        lateinit var model: WinGameViewModel
+        val makeGson = GsonBuilder().create()
+        val listType: TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
         val database = FirebaseFirestore.getInstance()
         var winGame = 0
         var loseGame = 0
@@ -37,25 +39,24 @@ class MainActivity : AppCompatActivity() {
         lateinit var result: ResultAdaptor
         lateinit var startShared: SharedPreferences
         lateinit var editor: SharedPreferences.Editor
-
-        //val user=database.collection("users")
         val SHARED_NAME = "get_id"
         val SHARED_WIN = "win_game"
         val SHARED_LOSE = "lose_game"
         val SHARED_RESULT = "game_result"
+        val SHARED_EMAIL = "get_email_fire"
     }
 
-    //나중에 Live데이터로 overview set 하기
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         startShared = getSharedPreferences("auto_login", Context.MODE_PRIVATE)
+        editor = startShared.edit()
         result = ResultAdaptor(overviewList)
         startObserve()
         model = ViewModelProvider(this).get(WinGameViewModel::class.java)
         FirebaseApp.initializeApp(this)
 
-        editor = startShared.edit()
+
         supportFragmentManager.beginTransaction().replace(
             R.id.container,
             OverviewFragment()
@@ -128,37 +129,39 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN) {
             var result = ""
-            var wingame=0
-            var losegame=0
-            userName = data?.getStringExtra("get_name").toString()
-            if (data != null) {
-                wingame = data.getLongExtra("get_win_fire",0).toInt()
-                losegame = data.getLongExtra("get_lose_fire",0).toInt()
-                result = data.getStringExtra("get_result").toString()
-                val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
-                if (datas != null) {
-                    overviewList.addAll(datas)
-                    model.setResult(overviewList)
-                }
-                winGame = wingame
-                loseGame = losegame
-
-
+            var email = ""
+            var wingame = 0
+            var losegame = 0
+            userName = data!!.getStringExtra("get_name").toString()
+            email = data.getStringExtra("get_email").toString()
+            wingame = data.getLongExtra("get_win_fire", 0).toInt()
+            losegame = data.getLongExtra("get_lose_fire", 0).toInt()
+            result = data.getStringExtra("get_result").toString()
+            Log.d("이메일", result)
+            Log.d("이메일", "data!=null")
+            val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
+            if (datas != null) {
+                overviewList.addAll(datas)
+                model.setResult(overviewList)
             }
-            Log.d("이름", userName)
+            winGame = wingame
+            loseGame = losegame
             model.setUserName(userName)
             model.setLoseGame(loseGame.toString())
             model.setWinGame(winGame.toString())
+            editor.putString(SHARED_EMAIL, email)
             editor.putString(SHARED_RESULT, result)
             editor.putString(SHARED_NAME, userName)
             editor.putInt(SHARED_WIN, winGame)
             editor.putInt(SHARED_LOSE, loseGame)
         }
-        editor.apply()
+        editor.commit()
+        Log.d("이메일", startShared.getString("get_email","안받아지노").toString())
     }
 
 }
