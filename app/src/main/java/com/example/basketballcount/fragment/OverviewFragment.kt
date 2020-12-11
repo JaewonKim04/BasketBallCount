@@ -88,7 +88,6 @@ class OverviewFragment : Fragment() {
         model.resultRecyclerView.observe(viewLifecycleOwner, Observer {
             editor.putString(SHARED_RESULT, strContact)
             editor.commit()
-            Log.d("itemCount", result.itemCount.toString())
             result.notifyDataSetChanged()
             if (email!="") {
                 addToFirebase(email,getRecycler,wingame,losegame)

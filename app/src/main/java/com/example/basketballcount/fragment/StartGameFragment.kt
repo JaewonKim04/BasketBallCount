@@ -48,8 +48,6 @@ class StartGameFragment : Fragment() {
     var getSec = false
     var getScore = false
     var readyToStart = false
-    var awayIndex=0
-    var ourIndex=0
     private lateinit var startButton: Button
     private lateinit var model: WinGameViewModel
     override fun onCreateView(
@@ -59,25 +57,29 @@ class StartGameFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_start_game, container, false)
         view.add_away_email_btn.setOnClickListener {
             if(view.get_away_email_et.text.toString().isNotEmpty()){
-                awayTeamList.add(awayIndex,view.get_away_email_et.text.toString())
+                awayTeamList.add(view.get_away_email_et.text.toString())
                 view.away_email_tv.text=view.away_email_tv.text.toString()+"\n"+view.get_away_email_et.text.toString()
+                view.get_away_email_et.text=null
             }
         }
         view.add_our_email_btn.setOnClickListener {
             if(view.get_ourteam_email_et.text.toString().isNotEmpty()){
-                ourTeamList.add(ourIndex,view.get_ourteam_email_et.text.toString())
+                ourTeamList.add(view.get_ourteam_email_et.text.toString())
                 view.our_email_tv.text=view.our_email_tv.text.toString()+"\n"+view.get_ourteam_email_et.text.toString()
+                view.get_ourteam_email_et.text=null
             }
         }
         startButton = view.findViewById(R.id.start_game_btn)
         startButton.setOnClickListener {
             if(view.get_ourteam_email_et.text.toString().isNotEmpty()){
-                ourTeamList.add(ourIndex,view.get_ourteam_email_et.text.toString())
+                ourTeamList.add(view.get_ourteam_email_et.text.toString())
                 view.our_email_tv.text=view.our_email_tv.text.toString()+"\n"+view.get_ourteam_email_et.text.toString()
+                view.get_ourteam_email_et.text=null
             }
             if(view.get_away_email_et.text.toString().isNotEmpty()){
-                awayTeamList.add(awayIndex,view.get_away_email_et.text.toString())
+                awayTeamList.add(view.get_away_email_et.text.toString())
                 view.away_email_tv.text=view.away_email_tv.text.toString()+"\n"+view.get_away_email_et.text.toString()
+                view.get_away_email_et.text=null
             }
             if (readyToStart) {
                 userName = view.get_away_et.text.toString()
@@ -92,6 +94,8 @@ class StartGameFragment : Fragment() {
 
                 activity?.let {
                     val intent = Intent(context, ScoreGameActivity::class.java)
+                    intent.putExtra("our_team_size",ourTeamList.size)
+                    intent.putExtra("away_team_size",awayTeamList.size)
                     intent.putExtra("goal_score", goalScore)
                     intent.putExtra("goal_time", goalTime)
                     intent.putExtra("game_type", startScoreGame)
@@ -227,6 +231,8 @@ class StartGameFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        var oursize=0
+        var awaysize=0
         if (requestCode == 3) {
             resultAwayName = data!!.getStringExtra("away_name").toString()
             resultMyScore = data.getIntExtra("my_score", 0)
@@ -234,6 +240,8 @@ class StartGameFragment : Fragment() {
             resultGameTime = data.getIntExtra("game_time", 0)
             resultWinGame = data.getBooleanExtra("game_result", true)
             resultGameDate = data.getStringExtra("game_date").toString()
+            oursize=data.getIntExtra("our_team_size",0)
+            awaysize=data.getIntExtra("away_team_size",0)
             val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
             overviewList.add(result.itemCount,setRecyclerView)
             model.setResult(overviewList)
@@ -241,11 +249,11 @@ class StartGameFragment : Fragment() {
         if (resultWinGame) {
             winGame++
             model.setWinGame(winGame.toString())
-            setOtherPerson(true)
+            setOtherPerson(true,oursize,awaysize)
         } else {
             loseGame++
             model.setLoseGame(loseGame.toString())
-            setOtherPerson(false)
+            setOtherPerson(false,oursize,awaysize)
         }
     }
 
@@ -254,10 +262,10 @@ class StartGameFragment : Fragment() {
         model=ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
     }
 
-    private fun setOtherPerson(win:Boolean){
+    private fun setOtherPerson(win:Boolean,oursize:Int,awaysize:Int){
         if(ourTeamList.size>0&&awayTeamList.size>0){
             if(win){
-                for(ct in 0..ourTeamList.size){
+                for(ct in 0..oursize){
                     var wingame:Long=0
                     val docRef= database.collection("users").document(ourTeamList[ct])
                     docRef.get().addOnSuccessListener {document->
@@ -268,7 +276,7 @@ class StartGameFragment : Fragment() {
                     )
                     database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
                 }
-                for(ct in 0..awayTeamList.size){
+                for(ct in 0..awaysize){
                     var losegame:Long=0
                     val docRef= database.collection("users").document(awayTeamList[ct])
                     docRef.get().addOnSuccessListener {document->
@@ -281,7 +289,7 @@ class StartGameFragment : Fragment() {
                 }
             }
             else{
-                for(ct in 0..ourTeamList.size){
+                for(ct in 0..oursize){
                     var wingame:Long=0
                     val docRef= database.collection("users").document(ourTeamList[ct])
                     docRef.get().addOnSuccessListener {document->
@@ -292,7 +300,7 @@ class StartGameFragment : Fragment() {
                     )
                     database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
                 }
-                for(ct in 0..awayTeamList.size){
+                for(ct in 0..awaysize){
                     var losegame:Long=0
                     val docRef= database.collection("users").document(awayTeamList[ct])
                     docRef.get().addOnSuccessListener {document->

@@ -22,6 +22,8 @@ class ScoreGameActivity : AppCompatActivity() {
     var awayScore = 0
     var goalTime = 0
     var rememberTime = 0
+    var oursize = 0
+    var awaysize = 0
     val MY_SCORE = true
     val AWAY_SCORE = false
     var wingame = true
@@ -36,7 +38,9 @@ class ScoreGameActivity : AppCompatActivity() {
         goalTime = intent.getIntExtra("goal_time", 0)
         gameType = intent.getBooleanExtra("game_type", true)
         awayName = intent.getStringExtra("away_name").toString()
-        textView7.text = awayName
+        oursize = intent.getIntExtra("our_team_size", 0)
+        awaysize = intent.getIntExtra("away_team_size", 0)
+        away_team_tv.text = awayName
         if (gameType) {
             timerTask = timer(period = 1000, initialDelay = 1000) {
                 goalTime += 1
@@ -137,6 +141,8 @@ class ScoreGameActivity : AppCompatActivity() {
         intent.putExtra("my_score", myScore)
         intent.putExtra("away_score", awayScore)
         intent.putExtra("away_name", awayName)
+        intent.putExtra("our_team_size",oursize)
+        intent.putExtra("away_team_size",awaysize)
         if (gameType) {
             intent.putExtra("game_time", goalTime)
         } else {
