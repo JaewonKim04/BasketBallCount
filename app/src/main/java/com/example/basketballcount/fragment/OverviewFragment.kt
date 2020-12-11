@@ -45,6 +45,8 @@ class OverviewFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
         view.logout_btn.setOnClickListener {
             activity?.let {
+                editor.clear()
+                editor.apply()
                 val intent = Intent(context, GetUserNameActivity::class.java)
                 startActivityForResult(intent, 1)
             }
@@ -57,7 +59,7 @@ class OverviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         email_tv.text= startShared.getString(SHARED_EMAIL,"").toString()
-        result = ResultAdaptor(overviewList)//
+        result = ResultAdaptor(overviewList)
         val makeGson = GsonBuilder().create()
         val listType: TypeToken<MutableList<Result>> = object : TypeToken<MutableList<Result>>() {}
         val model = ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
@@ -66,14 +68,9 @@ class OverviewFragment : Fragment() {
         editor.apply()
         overviewList.clear()
         val email= startShared.getString(SHARED_EMAIL,"").toString()
-        val getRecycler = startShared.getString(SHARED_RESULT, "")
         val wingame= startShared.getInt(SHARED_WIN,0)
         val losegame= startShared.getInt(SHARED_LOSE,0)
-        if (email!="") {
-            if (getRecycler != null) {
-                addToFirebase(email,getRecycler,wingame,losegame)
-            }
-        }
+        val getRecycler = startShared.getString(SHARED_RESULT, "").toString()
         val datas = makeGson.fromJson<MutableList<Result>>(getRecycler, listType.type)
         overviewList.addAll(datas)
         result.notifyDataSetChanged()
@@ -93,8 +90,12 @@ class OverviewFragment : Fragment() {
             editor.commit()
             Log.d("itemCount", result.itemCount.toString())
             result.notifyDataSetChanged()
+            if (email!="") {
+                addToFirebase(email,getRecycler,wingame,losegame)
+        }
         })
     }
+
     private fun addToFirebase(email:String,result:String,wingame:Int,loseGame:Int){
         val setwin=wingame.toLong()
         val setlose=loseGame.toLong()
@@ -103,39 +104,7 @@ class OverviewFragment : Fragment() {
             "losegame" to setlose,
             "wingame" to setwin
         )
-        MainActivity.database.collection("users").document(email).set(user).addOnSuccessListener {
-
-        }
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-            var result = ""
-            var email = ""
-            var wingame = 0
-            var losegame = 0
-            val userName = data!!.getStringExtra("get_name").toString()
-            email = data.getStringExtra("get_email").toString()
-            wingame = data.getLongExtra("get_win_fire", 0).toInt()
-            losegame = data.getLongExtra("get_lose_fire", 0).toInt()
-            result = data.getStringExtra("get_result").toString()
-            val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
-            if (datas != null) {
-                overviewList.addAll(datas)
-                model.setResult(overviewList)
-            }
-            MainActivity.winGame = wingame
-            MainActivity.loseGame = losegame
-            model.setUserName(userName)
-            model.setLoseGame(MainActivity.loseGame.toString())
-            model.setWinGame(MainActivity.winGame.toString())
-            editor.putString(SHARED_EMAIL, email)
-            editor.putString(SHARED_RESULT, result)
-            editor.putString(MainActivity.SHARED_NAME, userName)
-            editor.putInt(SHARED_WIN, MainActivity.winGame)
-            editor.putInt(SHARED_LOSE, MainActivity.loseGame)
-        }
-        editor.commit()
+        MainActivity.database.collection("users").document(email).set(user).addOnSuccessListener {        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.basketballcount.MainActivity.Companion.database
 import com.example.basketballcount.MainActivity.Companion.loseGame
 import com.example.basketballcount.MainActivity.Companion.overviewList
 import com.example.basketballcount.MainActivity.Companion.result
@@ -31,6 +33,9 @@ class StartGameFragment : Fragment() {
     var userName by Delegates.notNull<String>()
     var startScoreGame = false
 
+    val ourTeamList= mutableListOf<String>()
+    val awayTeamList= mutableListOf<String>()
+
     var resultWinGame = true
     var resultMyScore = 0
     var resultAwayScore = 0
@@ -43,6 +48,8 @@ class StartGameFragment : Fragment() {
     var getSec = false
     var getScore = false
     var readyToStart = false
+    var awayIndex=0
+    var ourIndex=0
     private lateinit var startButton: Button
     private lateinit var model: WinGameViewModel
     override fun onCreateView(
@@ -50,8 +57,28 @@ class StartGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_start_game, container, false)
+        view.add_away_email_btn.setOnClickListener {
+            if(view.get_away_email_et.text.toString().isNotEmpty()){
+                awayTeamList.add(awayIndex,view.get_away_email_et.text.toString())
+                view.away_email_tv.text=view.away_email_tv.text.toString()+"\n"+view.get_away_email_et.text.toString()
+            }
+        }
+        view.add_our_email_btn.setOnClickListener {
+            if(view.get_ourteam_email_et.text.toString().isNotEmpty()){
+                ourTeamList.add(ourIndex,view.get_ourteam_email_et.text.toString())
+                view.our_email_tv.text=view.our_email_tv.text.toString()+"\n"+view.get_ourteam_email_et.text.toString()
+            }
+        }
         startButton = view.findViewById(R.id.start_game_btn)
         startButton.setOnClickListener {
+            if(view.get_ourteam_email_et.text.toString().isNotEmpty()){
+                ourTeamList.add(ourIndex,view.get_ourteam_email_et.text.toString())
+                view.our_email_tv.text=view.our_email_tv.text.toString()+"\n"+view.get_ourteam_email_et.text.toString()
+            }
+            if(view.get_away_email_et.text.toString().isNotEmpty()){
+                awayTeamList.add(awayIndex,view.get_away_email_et.text.toString())
+                view.away_email_tv.text=view.away_email_tv.text.toString()+"\n"+view.get_away_email_et.text.toString()
+            }
             if (readyToStart) {
                 userName = view.get_away_et.text.toString()
                 if (startScoreGame) {
@@ -209,15 +236,16 @@ class StartGameFragment : Fragment() {
             resultGameDate = data.getStringExtra("game_date").toString()
             val setRecyclerView=Result(resultWinGame,resultGameTime,resultMyScore,resultAwayScore,resultAwayName,resultGameDate)//livedata로 만들기
             overviewList.add(result.itemCount,setRecyclerView)
-
             model.setResult(overviewList)
         }
         if (resultWinGame) {
             winGame++
             model.setWinGame(winGame.toString())
+            setOtherPerson(true)
         } else {
             loseGame++
             model.setLoseGame(loseGame.toString())
+            setOtherPerson(false)
         }
     }
 
@@ -225,5 +253,62 @@ class StartGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         model=ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
     }
+
+    private fun setOtherPerson(win:Boolean){
+        if(ourTeamList.size>0&&awayTeamList.size>0){
+            if(win){
+                for(ct in 0..ourTeamList.size){
+                    var wingame:Long=0
+                    val docRef= database.collection("users").document(ourTeamList[ct])
+                    docRef.get().addOnSuccessListener {document->
+                        wingame=document.data?.get("wingame") as Long
+                    }
+                    val user= hashMapOf(
+                        "wingame" to ++wingame
+                    )
+                    database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
+                }
+                for(ct in 0..awayTeamList.size){
+                    var losegame:Long=0
+                    val docRef= database.collection("users").document(awayTeamList[ct])
+                    docRef.get().addOnSuccessListener {document->
+                        losegame=document.data?.get("losegame") as Long
+                    }
+                    val user= hashMapOf(
+                        "losegame" to ++losegame
+                    )
+                    database.collection("users").document(awayTeamList[ct]).set(user).addOnSuccessListener{}
+                }
+            }
+            else{
+                for(ct in 0..ourTeamList.size){
+                    var wingame:Long=0
+                    val docRef= database.collection("users").document(ourTeamList[ct])
+                    docRef.get().addOnSuccessListener {document->
+                        wingame=document.data?.get("losegame") as Long
+                    }
+                    val user= hashMapOf(
+                        "losegame" to ++wingame
+                    )
+                    database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
+                }
+                for(ct in 0..awayTeamList.size){
+                    var losegame:Long=0
+                    val docRef= database.collection("users").document(awayTeamList[ct])
+                    docRef.get().addOnSuccessListener {document->
+                        losegame=document.data?.get("wingame") as Long
+                    }
+                    val user= hashMapOf(
+                        "wingame" to ++losegame
+                    )
+                    database.collection("users").document(awayTeamList[ct]).set(user).addOnSuccessListener{}
+                }
+            }
+
+        }
+
+
+    }
+
 
 }

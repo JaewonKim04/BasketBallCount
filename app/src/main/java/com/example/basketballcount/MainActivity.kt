@@ -26,8 +26,6 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_LOGIN = 1
     private var userName: String = ""
 
-
-
     companion object {
         lateinit var model: WinGameViewModel
         val makeGson = GsonBuilder().create()
@@ -55,18 +53,16 @@ class MainActivity : AppCompatActivity() {
         startObserve()
         model = ViewModelProvider(this).get(WinGameViewModel::class.java)
         FirebaseApp.initializeApp(this)
-
-
-        supportFragmentManager.beginTransaction().replace(
-            R.id.container,
-            OverviewFragment()
-        )
-            .commit()
         bottom_navigation.setOnNavigationItemSelectedListener(itemListener)
         if (readAutoLogin()) {
             val intent = Intent(this, GetUserNameActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE_LOGIN)
         }
+        supportFragmentManager.beginTransaction().replace(
+            R.id.container,
+            OverviewFragment()
+        )
+            .commit()
     }
 
     private fun startObserve() {
@@ -158,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             editor.putInt(SHARED_WIN, winGame)
             editor.putInt(SHARED_LOSE, loseGame)
         }
-        editor.commit()
+        editor.apply()
     }
 
 }

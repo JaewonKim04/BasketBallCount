@@ -24,7 +24,6 @@ class WinGameViewModel : ViewModel() {
 
     fun setResult(result:MutableList<Result>){
         resultRecyclerView.value=result
-        Log.d("itemCount","바뀜")
     }
 
 }

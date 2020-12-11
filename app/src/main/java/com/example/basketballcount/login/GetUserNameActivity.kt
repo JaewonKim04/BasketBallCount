@@ -41,8 +41,8 @@ class GetUserNameActivity : AppCompatActivity() {
                             val user = Firebase.auth.currentUser
                             var name = ""
                             var resultGson = ""
-                            var wingame: Long
-                            var losegame: Long
+                            var wingame: Long = 0
+                            var losegame: Long = 0
                             user?.let {
                                 user.displayName
                                 name = user.displayName.toString()
@@ -51,20 +51,24 @@ class GetUserNameActivity : AppCompatActivity() {
                                 database.collection("users")
                                     .document(it1)
                             }
+
+
                             readUser?.get()?.addOnSuccessListener { document ->
                                 resultGson = document.data?.get("result_gson") as String
                                 wingame = document.data?.get("wingame") as Long
                                 losegame = document.data?.get("losegame") as Long
+                                Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
+                                .show()
                                 intent.putExtra("get_win_fire", wingame)
                                 intent.putExtra("get_lose_fire", losegame)
+                                intent.putExtra("get_email", user!!.email.toString())
+                                intent.putExtra("get_name", name)
+                                intent.putExtra("get_result", resultGson)
+                                setResult(Activity.RESULT_OK, intent)
+                                finish()
+
                             }
-                            Toast.makeText(applicationContext, "로그인 되었습니다", Toast.LENGTH_SHORT)
-                                .show()
-                            intent.putExtra("get_email", user!!.email.toString())
-                            intent.putExtra("get_name", name)
-                            intent.putExtra("get_result", resultGson)
-                            setResult(Activity.RESULT_OK, intent)
-                            finish()
+
                         } else {
                             Toast.makeText(
                                 applicationContext,

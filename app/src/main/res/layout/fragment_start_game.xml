@@ -45,11 +45,11 @@
         android:id="@+id/get_away_et"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="상대이름"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/choose_mode_btn" />
 
@@ -68,43 +68,127 @@
         android:id="@+id/decide_min_et"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:digits="0123456789"
         android:ems="10"
         android:hint="분"
-        android:text=""
-        android:digits="0123456789"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/decide_sec_et"
-        app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choose_mode_btn" />
 
     <EditText
         android:id="@+id/decide_sec_et"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:digits="0123456789"
         android:ems="10"
         android:hint="초"
-        android:digits="0123456789"
-        android:text=""
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/decide_min_et"
+        app:layout_constraintTop_toBottomOf="@+id/choose_mode_btn" />
 
     <EditText
         android:id="@+id/decide_score_et"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
+        android:digits="0123456789"
         android:ems="10"
         android:hint="목표점수"
-        android:digits="0123456789"
-        android:text=""
         android:inputType="number"
+        android:text=""
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/get_away_et"
+        app:layout_constraintTop_toBottomOf="@+id/choose_mode_btn" />
+
+    <EditText
+        android:id="@+id/get_ourteam_email_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="우리팀 이메일입력"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline1"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+
+    <EditText
+        android:id="@+id/get_away_email_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="상대팀 이메일입력"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+
+    <Button
+        android:id="@+id/add_our_email_btn"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="+"
+        android:textColor="#ffffff"
+        android:background="@drawable/my_button_round"
+        app:layout_constraintStart_toEndOf="@+id/get_ourteam_email_et"
+        app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+
+    <Button
+        android:id="@+id/add_away_email_btn"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="+"
+        android:textColor="#ffffff"
+        android:background="@drawable/away_button_background"
+        app:layout_constraintStart_toEndOf="@+id/get_away_email_et"
+        app:layout_constraintTop_toBottomOf="@+id/get_away_et" />
+
+    <TextView
+        android:id="@+id/our_email_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/my_button_round"
+        android:backgroundTint="#a6cbff"
+        android:text="emails"
+        android:gravity="center"
+        app:layout_constraintEnd_toStartOf="@+id/guideline1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/get_ourteam_email_et" />
+
+    <TextView
+        android:id="@+id/away_email_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/away_button_background"
+        android:backgroundTint="#ffbfa6"
+        android:text="emails"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/get_away_email_et" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
