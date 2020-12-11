@@ -35,7 +35,7 @@ class ScoreGameActivity : AppCompatActivity() {
         goalScore = intent.getIntExtra("goal_score", 0)
         goalTime = intent.getIntExtra("goal_time", 0)
         gameType = intent.getBooleanExtra("game_type", true)
-        awayName = intent.getStringExtra("user_name").toString()
+        awayName = intent.getStringExtra("away_name").toString()
         textView7.text = awayName
         if (gameType) {
             timerTask = timer(period = 1000, initialDelay = 1000) {
@@ -138,7 +138,7 @@ class ScoreGameActivity : AppCompatActivity() {
         intent.putExtra("away_score", awayScore)
         intent.putExtra("away_name", awayName)
         if (gameType) {
-            intent.putExtra("away_name", goalTime)
+            intent.putExtra("game_time", goalTime)
         } else {
             intent.putExtra("game_time", rememberTime)
         }

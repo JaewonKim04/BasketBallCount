@@ -68,7 +68,7 @@ class StartGameFragment : Fragment() {
                     intent.putExtra("goal_score", goalScore)
                     intent.putExtra("goal_time", goalTime)
                     intent.putExtra("game_type", startScoreGame)
-                    intent.putExtra("user_name", userName)
+                    intent.putExtra("away_name", userName)
                     startActivityForResult(intent, 3)
                 }
 
