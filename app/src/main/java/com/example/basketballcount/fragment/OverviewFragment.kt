@@ -46,7 +46,7 @@ class OverviewFragment : Fragment() {
         view.logout_btn.setOnClickListener {
             activity?.let {
                 editor.clear()
-                editor.apply()
+                editor.commit()
                 val intent = Intent(context, GetUserNameActivity::class.java)
                 startActivityForResult(intent, 1)
             }

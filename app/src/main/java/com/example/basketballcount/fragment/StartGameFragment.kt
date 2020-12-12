@@ -23,6 +23,8 @@ import com.example.basketballcount.R
 import com.example.basketballcount.ScoreGameActivity
 import com.example.basketballcount.viewmodel.WinGameViewModel
 import com.example.basketballcount.adaptor.Result
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_start_game.view.*
 import java.lang.Integer.parseInt
 import kotlin.properties.Delegates
@@ -94,6 +96,12 @@ class StartGameFragment : Fragment() {
 
                 activity?.let {
                     val intent = Intent(context, ScoreGameActivity::class.java)
+                    val makeGson = GsonBuilder().create()
+                    val listType: TypeToken<MutableList<String>> = object : TypeToken<MutableList<String>>() {}
+                    val strContact = makeGson.toJson(ourTeamList, listType.type)
+                    val awayContact=makeGson.toJson(awayTeamList,listType.type)
+                    intent.putExtra("our_team_list",strContact)
+                    intent.putExtra("away_team_list",awayContact)
                     intent.putExtra("our_team_size",ourTeamList.size)
                     intent.putExtra("away_team_size",awayTeamList.size)
                     intent.putExtra("goal_score", goalScore)
@@ -249,11 +257,9 @@ class StartGameFragment : Fragment() {
         if (resultWinGame) {
             winGame++
             model.setWinGame(winGame.toString())
-            setOtherPerson(true,oursize,awaysize)
         } else {
             loseGame++
             model.setLoseGame(loseGame.toString())
-            setOtherPerson(false,oursize,awaysize)
         }
     }
 
@@ -262,61 +268,7 @@ class StartGameFragment : Fragment() {
         model=ViewModelProvider(requireActivity()).get(WinGameViewModel::class.java)
     }
 
-    private fun setOtherPerson(win:Boolean,oursize:Int,awaysize:Int){
-        if(ourTeamList.size>0&&awayTeamList.size>0){
-            if(win){
-                for(ct in 0..oursize){
-                    var wingame:Long=0
-                    val docRef= database.collection("users").document(ourTeamList[ct])
-                    docRef.get().addOnSuccessListener {document->
-                        wingame=document.data?.get("wingame") as Long
-                    }
-                    val user= hashMapOf(
-                        "wingame" to ++wingame
-                    )
-                    database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
-                }
-                for(ct in 0..awaysize){
-                    var losegame:Long=0
-                    val docRef= database.collection("users").document(awayTeamList[ct])
-                    docRef.get().addOnSuccessListener {document->
-                        losegame=document.data?.get("losegame") as Long
-                    }
-                    val user= hashMapOf(
-                        "losegame" to ++losegame
-                    )
-                    database.collection("users").document(awayTeamList[ct]).set(user).addOnSuccessListener{}
-                }
-            }
-            else{
-                for(ct in 0..oursize){
-                    var wingame:Long=0
-                    val docRef= database.collection("users").document(ourTeamList[ct])
-                    docRef.get().addOnSuccessListener {document->
-                        wingame=document.data?.get("losegame") as Long
-                    }
-                    val user= hashMapOf(
-                        "losegame" to ++wingame
-                    )
-                    database.collection("users").document(ourTeamList[ct]).set(user).addOnSuccessListener{}
-                }
-                for(ct in 0..awaysize){
-                    var losegame:Long=0
-                    val docRef= database.collection("users").document(awayTeamList[ct])
-                    docRef.get().addOnSuccessListener {document->
-                        losegame=document.data?.get("wingame") as Long
-                    }
-                    val user= hashMapOf(
-                        "wingame" to ++losegame
-                    )
-                    database.collection("users").document(awayTeamList[ct]).set(user).addOnSuccessListener{}
-                }
-            }
 
-        }
-
-
-    }
 
 
 }
