@@ -10,6 +10,7 @@ class WinGameViewModel : ViewModel() {
     val wingame = MutableLiveData<String>()
     val losegame=MutableLiveData<String>()
     val userName = MutableLiveData<String>()
+    val userEmail=MutableLiveData<String>()
     val resultRecyclerView= MutableLiveData<MutableList<Result>>()
     fun setWinGame(text: String) {
         wingame.value = text
@@ -24,6 +25,9 @@ class WinGameViewModel : ViewModel() {
 
     fun setResult(result:MutableList<Result>){
         resultRecyclerView.value=result
+    }
+    fun setEmail(text:String){
+        userEmail.value=text
     }
 
 }

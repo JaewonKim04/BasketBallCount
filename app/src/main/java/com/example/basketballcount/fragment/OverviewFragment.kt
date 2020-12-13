@@ -48,11 +48,10 @@ class OverviewFragment : Fragment() {
                 editor.clear()
                 editor.commit()
                 val intent = Intent(context, GetUserNameActivity::class.java)
-                startActivityForResult(intent, 1)
+                startActivityForResult(intent, 2)
             }
 
         }
-        view.email_tv.text= startShared.getString(SHARED_EMAIL,"").toString()
         return view
     }
 
@@ -85,6 +84,9 @@ class OverviewFragment : Fragment() {
         model.losegame.observe(viewLifecycleOwner, Observer {
             lose_tv.text = it
         })
+        model.userEmail.observe(viewLifecycleOwner, Observer {
+            email_tv.text=it
+        })
         model.resultRecyclerView.observe(viewLifecycleOwner, Observer {
             editor.putString(SHARED_RESULT, strContact)
             editor.commit()
@@ -93,6 +95,38 @@ class OverviewFragment : Fragment() {
                 addToFirebase(email,getRecycler,wingame,losegame)
         }
         })
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 2) {
+            Log.d("읽어옴?","ㅇㅇ")
+            var result = ""
+            var email = ""
+            var wingame = 0
+            var losegame = 0
+            val userName = data!!.getStringExtra("get_name").toString()
+            email = data.getStringExtra("get_email").toString()
+            wingame = data.getLongExtra("get_win_fire", 0).toInt()
+            losegame = data.getLongExtra("get_lose_fire", 0).toInt()
+            result = data.getStringExtra("get_result").toString()
+            val datas = makeGson.fromJson<MutableList<Result>>(result, listType.type)
+            if (datas != null) {
+                overviewList.addAll(datas)
+                model.setResult(overviewList)
+            }
+            MainActivity.winGame = wingame
+            MainActivity.loseGame = losegame
+            model.setUserName(userName)
+            model.setLoseGame(MainActivity.loseGame.toString())
+            model.setWinGame(MainActivity.winGame.toString())
+            model.setEmail(email)
+            editor.putString(SHARED_EMAIL, email)
+            editor.putString(SHARED_RESULT, result)
+            editor.putString(MainActivity.SHARED_NAME, userName)
+            editor.putInt(SHARED_WIN, MainActivity.winGame)
+            editor.putInt(SHARED_LOSE, MainActivity.loseGame)
+        }
+        editor.apply()
     }
 
     private fun addToFirebase(email:String,result:String,wingame:Int,loseGame:Int){

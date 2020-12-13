@@ -124,11 +124,10 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN) {
+            Log.d("읽어옴?","ㅇㅇ")
             var result = ""
             var email = ""
             var wingame = 0
@@ -148,6 +147,7 @@ class MainActivity : AppCompatActivity() {
             model.setUserName(userName)
             model.setLoseGame(loseGame.toString())
             model.setWinGame(winGame.toString())
+            model.setEmail(email)
             editor.putString(SHARED_EMAIL, email)
             editor.putString(SHARED_RESULT, result)
             editor.putString(SHARED_NAME, userName)
