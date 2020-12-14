@@ -114,6 +114,10 @@ class OverviewFragment : Fragment() {
                 overviewList.addAll(datas)
                 model.setResult(overviewList)
             }
+            else{
+                overviewList.clear()
+                model.setResult(overviewList)
+            }
             MainActivity.winGame = wingame
             MainActivity.loseGame = losegame
             model.setUserName(userName)

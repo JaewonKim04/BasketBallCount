@@ -115,8 +115,14 @@ class MainActivity : AppCompatActivity() {
             overviewList.clear()
             val getRecycler = startShared.getString(SHARED_RESULT, "")
             val datas = makeGson.fromJson<MutableList<Result>>(getRecycler, listType.type)
-            overviewList.addAll(datas)//
-            model.setResult(overviewList)
+            if (datas != null) {
+                overviewList.addAll(datas)
+                model.setResult(overviewList)
+            }
+            else{
+                overviewList.clear()
+                model.setResult(overviewList)
+            }
             model.setUserName(userName)
             model.setWinGame(winGame.toString())
             model.setLoseGame(loseGame.toString())
